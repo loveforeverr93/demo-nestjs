@@ -44,6 +44,10 @@ import redisConfig from './config/redis.config';
       useFactory: (configService: ConfigService) => ({
         type: 'single',
         url: configService.get<string>('redis.url'),
+        tls: {
+          // Render và Upstash cần cái này để xác thực chứng chỉ
+          rejectUnauthorized: false,
+        },
       }),
     }),
     LoggerModule,
