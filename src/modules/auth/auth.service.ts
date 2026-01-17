@@ -1,11 +1,10 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
-import { InjectRedis } from '@nestjs-modules/ioredis';
-import Redis from 'ioredis';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -13,14 +12,12 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import type { StringValue } from 'ms';
 import { ConfigService } from '@nestjs/config';
-import { access } from 'fs';
-import { ref } from 'process';
 import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRedis() private readonly redis: Redis,
+    @Inject('REDIS') private readonly redis: any,
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -52,7 +49,9 @@ export class AuthService {
     const refreshToken = this.generateRefreshToken();
 
     const redisKey = `refresh_token:${refreshToken}`;
-    await this.redis.set(redisKey, user.userId, 'EX', 60 * 60 * 24 * 7);
+    await this.redis.set(redisKey, String(user.userId), {
+      ex: 60 * 60 * 24 * 7,
+    });
     return { accessToken, refreshToken };
   }
 

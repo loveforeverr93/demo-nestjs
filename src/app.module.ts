@@ -3,13 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { Project } from './modules/project/entities/project.entity';
 import { ProjectModule } from './modules/project/project.module';
-import { User } from './modules/users/entities/user.entity';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisModule } from '@nestjs-modules/ioredis';
 import { LoggerModule } from './shared/logger/logger.module';
+import { RedisModule } from './shared/redis/redis.module';
 import appConfig from './config/app.config';
 import jwtConfig from './config/jwt.config';
 import databaseConfig from './config/database.config';
@@ -39,18 +37,8 @@ import redisConfig from './config/redis.config';
     AuthModule,
     UsersModule,
     ProjectModule,
-    RedisModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'single',
-        url: configService.get<string>('redis.url'),
-        tls: {
-          // Render và Upstash cần cái này để xác thực chứng chỉ
-          rejectUnauthorized: false,
-        },
-      }),
-    }),
     LoggerModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
