@@ -8,7 +8,7 @@ export const AppDataSource = new DataSource({
   port: parseInt(process.env.DB_PORT ?? '3306', 10),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  name: process.env.DB_NAME,
+  database: process.env.DB_NAME,
   entities: [User, Project],
   migrations: ['dist/database/migrations/*.js'],
   synchronize: false,
