@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import type { StringValue } from 'ms';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { RedisModule } from '../../shared/redis/redis.module';
 
 @Module({
   controllers: [AuthController],
@@ -23,6 +24,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         },
       }),
     }),
+    RedisModule,
   ],
 })
 export class AuthModule {}
