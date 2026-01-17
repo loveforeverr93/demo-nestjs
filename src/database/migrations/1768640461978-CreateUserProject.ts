@@ -1,8 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateUserProject20251230 implements MigrationInterface {
-  name = 'CreateUserProject20251230';
-
+export class CreateUserProject1768640461978 implements MigrationInterface {
   async up(queryRunner: QueryRunner): Promise<void> {
     // 1. Tạo bảng users
     await queryRunner.query(`
