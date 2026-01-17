@@ -24,6 +24,7 @@ async function run() {
       entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
     }).initialize();
     await runSeeds(dataSource);
+    console.log('✅ Seeds completed successfully');
     try {
       console.log('🌱 Running seeds');
       // ... logic seed của bạn ...
@@ -32,8 +33,11 @@ async function run() {
       console.error('❌ Seed error:', error);
       process.exit(1); // Thoát với lỗi
     } finally {
-      await dataSource.destroy(); // QUAN TRỌNG: Đóng kết nối DB
-      console.log('👋 Seed finished, exiting...');
+      if (dataSource && dataSource.isInitialized) {
+        await dataSource.destroy();
+        console.log('🔌 Database connection closed');
+      }
+      console.log('👋 Process exiting...');
       process.exit(0); // QUAN TRỌNG: Thoát tiến trình để lệnh tiếp theo chạy
     }
   } catch (e) {
