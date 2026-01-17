@@ -4,7 +4,6 @@ import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
-import { RedisModule } from '@nestjs-modules/ioredis';
 import { JwtModule } from '@nestjs/jwt';
 import type { StringValue } from 'ms';
 import { LocalStrategy } from './strategies/local.strategy';
