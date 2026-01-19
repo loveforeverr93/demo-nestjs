@@ -6,15 +6,15 @@ export class RedisClient {
   static getClient(redisUrl: string): Redis {
     if (!RedisClient.client) {
       RedisClient.client = new Redis(redisUrl, {
-        tls: redisUrl.startsWith('rediss://') ? {} : undefined,
+        tls: {
+          rejectUnauthorized: false,
+        },
         maxRetriesPerRequest: null,
-        enableReadyCheck: true,
-        lazyConnect: true,
         keepAlive: 1000,
         retryStrategy: (times) => {
           return Math.min(times * 100, 2000);
         },
-        connectTimeout: 10000,
+        connectTimeout: 5000,
       });
       RedisClient.client.on('connect', () => console.log('✅ Redis connected'));
       RedisClient.client.on('error', (err) =>
