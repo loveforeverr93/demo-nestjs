@@ -8,14 +8,21 @@ export class RedisClient {
       RedisClient.client = new Redis(redisUrl, {
         tls: redisUrl.startsWith('rediss://') ? {} : undefined,
         maxRetriesPerRequest: null,
-        enableReadyCheck: false,
+        enableReadyCheck: true,
         lazyConnect: true,
-        keepAlive: 0,
+        keepAlive: 1000,
         retryStrategy: (times) => {
-          if (times > 3) return null;
           return Math.min(times * 100, 2000);
         },
+        connectTimeout: 10000,
       });
+      RedisClient.client.on('connect', () => console.log('✅ Redis connected'));
+      RedisClient.client.on('error', (err) =>
+        console.error('❌ Redis Error:', err),
+      );
+      RedisClient.client.on('reconnecting', () =>
+        console.log('🔄 Redis reconnecting...'),
+      );
     }
     return RedisClient.client;
   }
