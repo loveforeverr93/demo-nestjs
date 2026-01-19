@@ -4,17 +4,18 @@ export class RedisClient {
   private static client: Redis;
 
   static getClient(redisUrl: string): Redis {
+    const isProduction = process.env.NODE_ENV === 'production';
     if (!RedisClient.client) {
       RedisClient.client = new Redis(redisUrl, {
-        tls: {
-          rejectUnauthorized: false,
-        },
+        tls: redisUrl.startsWith('rediss://') ? {} : undefined,
         maxRetriesPerRequest: null,
+        enableReadyCheck: true,
+        lazyConnect: true,
         keepAlive: 1000,
         retryStrategy: (times) => {
           return Math.min(times * 100, 2000);
         },
-        connectTimeout: 5000,
+        connectTimeout: 10000,
       });
       RedisClient.client.on('connect', () => console.log('✅ Redis connected'));
       RedisClient.client.on('error', (err) =>
