@@ -28,7 +28,8 @@ export class AuthService {
       where: { username: request.username },
     });
 
-    if (!user) throw new UnauthorizedException('Username not correct');
+    if (!user)
+      throw new UnauthorizedException('Username and password is incorrect');
     const jwt = await this.generateToken(user);
     return {
       message: 'Login successfully',
@@ -80,10 +81,12 @@ export class AuthService {
 
   async validateUser(username: string, password: string) {
     const user = await this.usersRepository.findOne({ where: { username } });
-    if (!user) throw new BadRequestException('User not found');
+    if (!user)
+      throw new BadRequestException('Username or password is incorrect');
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new UnauthorizedException('Password is incorrect');
+    if (!isMatch)
+      throw new UnauthorizedException('Username or password is incorrect');
 
     return user;
   }
