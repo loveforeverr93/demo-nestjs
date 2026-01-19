@@ -27,18 +27,18 @@ async function run() {
     console.log('✅ Seeds completed successfully');
     try {
       console.log('🌱 Running seeds');
-      // ... logic seed của bạn ...
+      
       console.log('✅ Admin user already exists');
     } catch (error) {
       console.error('❌ Seed error:', error);
-      process.exit(1); // Thoát với lỗi
+      process.exit(1);
     } finally {
       if (dataSource && dataSource.isInitialized) {
         await dataSource.destroy();
         console.log('🔌 Database connection closed');
       }
       console.log('👋 Process exiting...');
-      process.exit(0); // QUAN TRỌNG: Thoát tiến trình để lệnh tiếp theo chạy
+      process.exit(0);
     }
   } catch (e) {
     console.error(e);

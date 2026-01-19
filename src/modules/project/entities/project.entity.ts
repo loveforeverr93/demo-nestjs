@@ -29,6 +29,14 @@ export class Project {
   @ManyToMany(() => User, (user) => user.memberProjects, { eager: true })
   @JoinTable({
     name: 'projects_members_users',
+    joinColumn: {
+      name: 'projectId',
+      referencedColumnName: 'projectId',
+    },
+    inverseJoinColumn: {
+      name: 'userId',
+      referencedColumnName: 'userId',
+    },
   })
   members: User[];
 
