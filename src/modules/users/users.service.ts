@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
@@ -56,7 +57,6 @@ export class UsersService {
       order: { userCode: 'ASC' },
     });
 
-    // const users = await this.usersRepository.find();
     return {
       items: users.map((user) => this.mapToUserDto(user)),
       meta: {
@@ -70,13 +70,13 @@ export class UsersService {
 
   async findByUserCode(userCode: string) {
     const user = await this.usersRepository.findOne({ where: { userCode } });
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new NotFoundException('User not found');
     return this.mapToUserDto(user);
   }
 
   async update(userCode: string, request: UpdateUserDto) {
     const user = await this.usersRepository.findOne({ where: { userCode } });
-    if (!user) throw new BadRequestException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
     this.usersRepository.merge(user, request);
     await this.usersRepository.save(user);
@@ -86,7 +86,7 @@ export class UsersService {
 
   async removeByCode(userCode: string) {
     const result = await this.usersRepository.delete(userCode);
-    if (result.affected === 0) throw new BadRequestException('User not found');
+    if (result.affected === 0) throw new NotFoundException('User not found');
     return `${userCode} is deleted`;
   }
 

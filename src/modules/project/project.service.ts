@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { changeStatusProject } from './dto/change-status-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -62,6 +66,12 @@ export class ProjectService {
       .take(pageSize)
       .getMany();
 
+    if (!projects)
+      return {
+        items: [],
+        meta: { currentPage: 0, pageSize: 0, totalItems: 0, totalPages: 0 },
+      };
+
     return {
       items: projects.map((project) => this.mapToProjectDto(project)),
       meta: {
@@ -83,7 +93,7 @@ export class ProjectService {
         userCode,
       })
       .getOne();
-    if (!project) throw new BadRequestException('Project not found');
+    if (!project) throw new NotFoundException('Project not found');
 
     return this.mapToProjectDto(project);
   }
@@ -97,7 +107,7 @@ export class ProjectService {
       where: { projectCode },
     });
 
-    if (!project) throw new BadRequestException('Project not found');
+    if (!project) throw new NotFoundException('Project not found');
 
     if (userCode !== project.owner.userCode)
       throw new BadRequestException('You are not the owner of this project');
@@ -119,7 +129,7 @@ export class ProjectService {
       where: { projectCode },
     });
 
-    if (!project) throw new BadRequestException('Project not found');
+    if (!project) throw new NotFoundException('Project not found');
 
     if (userCode !== project.owner.userCode)
       throw new BadRequestException('You are not the owner of this project');
@@ -128,8 +138,7 @@ export class ProjectService {
       throw new BadRequestException('You can not delete this project');
 
     const result = await this.projectRepository.delete(projectCode);
-    if (result.affected === 0)
-      throw new BadRequestException('Project not found');
+    if (result.affected === 0) throw new NotFoundException('Project not found');
 
     return `${projectCode} is deleted`;
   }
@@ -142,7 +151,7 @@ export class ProjectService {
     const project = await this.projectRepository.findOne({
       where: { projectCode },
     });
-    if (!project) throw new BadRequestException('Project not found');
+    if (!project) throw new NotFoundException('Project not found');
 
     if (
       userCode !== project.owner.userCode &&
@@ -168,7 +177,7 @@ export class ProjectService {
       where: { projectCode },
       relations: ['owner', 'members'],
     });
-    if (!project) throw new BadRequestException('Project not found.');
+    if (!project) throw new NotFoundException('Project not found.');
 
     if (ownerCode !== project.owner.userCode)
       throw new BadRequestException('You are not project owner.');
@@ -201,7 +210,7 @@ export class ProjectService {
       where: { projectCode },
       relations: ['owner', 'members'],
     });
-    if (!project) throw new BadRequestException('Project not found.');
+    if (!project) throw new NotFoundException('Project not found.');
 
     if (ownerCode !== project.owner.userCode)
       throw new BadRequestException('You are not project owner.');
@@ -228,7 +237,7 @@ export class ProjectService {
           userCode,
         })
         .getOne();
-      if (!project) throw new BadRequestException('Project not found.');
+      if (!project) throw new NotFoundException('Project not found.');
 
       const existingUserCode = [
         project.owner.userCode,
@@ -255,7 +264,7 @@ export class ProjectService {
       where: { projectCode },
       relations: ['owner', 'members'],
     });
-    if (!project) throw new BadRequestException('Project not found.');
+    if (!project) throw new NotFoundException('Project not found.');
     const users = await this.usersRepository.find({
       where: { userCode: In(project.members.map((member) => member.userCode)) },
     });
