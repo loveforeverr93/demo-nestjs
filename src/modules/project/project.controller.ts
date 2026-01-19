@@ -24,7 +24,7 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('create')
   create(
     @Body() request: CreateProjectDto,
     @CurrentUser('userCode') userCode: string,
@@ -84,7 +84,7 @@ export class ProjectController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('members')
+  @Post('add-members')
   addMember(
     @Query('projectCode') projectCode: string,
     @CurrentUser('userCode') ownerCode: string,
@@ -94,7 +94,7 @@ export class ProjectController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('members')
+  @Delete('remove-members')
   removeMember(
     @Query('projectCode') projectCode: string,
     @CurrentUser('userCode') ownerCode: string,
@@ -113,7 +113,7 @@ export class ProjectController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('members')
+  @Get('project-members')
   getProjectMembers(@Query('projectCode') projectCode: string) {
     return this.projectService.getProjectMembers(projectCode);
   }
