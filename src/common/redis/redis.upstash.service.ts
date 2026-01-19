@@ -1,17 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { IRedisService } from './redis.interface';
-import { RedisClient } from './redis.client';
+import { Redis } from '@upstash/redis';
 
 @Injectable()
 export class RedisUpstashService implements IRedisService {
-  private readonly redis = RedisClient.getClient(process.env.REDIS_URL ?? '');
+  private readonly redis: Redis;
+
+  constructor() {
+    this.redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+  }
 
   async get(key: string) {
-    return this.redis.get(key);
+    return await this.redis.get<string>(key);
   }
 
   async set(key: string, value: string, ttl: number) {
-    await this.redis.set(key, value, 'EX', ttl);
+    await this.redis.set(key, value, { ex: ttl });
   }
 
   async del(key: string) {
