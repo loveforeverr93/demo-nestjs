@@ -4,10 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { changeStatusProject } from './dto/change-status-project.dto';
+import { ChangeStatusProject } from './dto/change-status-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
-import { Repository, DataSource, In, Not, IsNull } from 'typeorm';
+import { Repository, DataSource, In, Not } from 'typeorm';
 import { Project } from './entities/project.entity';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectResponseDto } from './dto/project-response.dto';
@@ -15,7 +15,6 @@ import { ProjectStatusEnum } from './project.enum';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PaginationResponseDto } from '../../common/interfaces/pagination-response.dto';
 import { UpdateProjectMembersDto } from './dto/update-project-members.dto';
-import { UserReponseDto } from '../users/dto/user-response.dto';
 import { UserProjectDto } from './dto/user-project.dto';
 @Injectable()
 export class ProjectService {
@@ -143,9 +142,9 @@ export class ProjectService {
     return `${projectCode} is deleted`;
   }
 
-  async changeStatusProject(
+  async ChangeStatusProject(
     projectCode: string,
-    request: changeStatusProject,
+    request: ChangeStatusProject,
     userCode: string,
   ) {
     const project = await this.projectRepository.findOne({

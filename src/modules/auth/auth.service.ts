@@ -17,7 +17,7 @@ import { randomUUID } from 'crypto';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('REDIS') private readonly redis: any,
+    @Inject('REDIS_SERVICE') private readonly redis: any,
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -49,9 +49,7 @@ export class AuthService {
     const refreshToken = this.generateRefreshToken();
 
     const redisKey = `refresh_token:${refreshToken}`;
-    await this.redis.set(redisKey, String(user.userId), {
-      ex: 60 * 60 * 24 * 7,
-    });
+    await this.redis.set(redisKey, String(user.userId), 'EX', 60 * 60 * 24);
     return { accessToken, refreshToken };
   }
 

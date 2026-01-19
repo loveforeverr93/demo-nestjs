@@ -1,7 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
 import { ProjectStatusEnum } from '../project.enum';
 
-export class changeStatusProject {
+export class ChangeStatusProject {
   @IsNotEmpty({ message: 'Status is required' })
   status: ProjectStatusEnum;
 }

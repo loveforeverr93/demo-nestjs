@@ -7,7 +7,7 @@ import { ProjectModule } from './modules/project/project.module';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from './shared/logger/logger.module';
-import { RedisModule } from './shared/redis/redis.module';
+import { RedisModule } from './common/redis/redis.module';
 import appConfig from './config/app.config';
 import jwtConfig from './config/jwt.config';
 import databaseConfig from './config/database.config';
@@ -18,7 +18,8 @@ import redisConfig from './config/redis.config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, jwtConfig, databaseConfig, redisConfig],
-      envFilePath: '.env.production',
+      envFilePath:
+        process.env.NODE_ENV === 'production' ? '.env.production' : '.env',
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],

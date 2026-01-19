@@ -7,12 +7,11 @@ import {
   Param,
   Delete,
   UseGuards,
-  Req,
   Query,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { changeStatusProject } from './dto/change-status-project.dto';
+import { ChangeStatusProject } from './dto/change-status-project.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -62,12 +61,12 @@ export class ProjectController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('status')
-  changeStatusProject(
+  ChangeStatusProject(
     @Query('projectCode') projectCode: string,
-    @Body() request: changeStatusProject,
+    @Body() request: ChangeStatusProject,
     @CurrentUser('userCode') userCode: string,
   ) {
-    return this.projectService.changeStatusProject(
+    return this.projectService.ChangeStatusProject(
       projectCode,
       request,
       userCode,
