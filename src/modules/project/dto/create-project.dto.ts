@@ -1,10 +1,17 @@
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 import { UserProjectDto } from './user-project.dto';
 import { ProjectPriorityEnum } from '../project.enum';
 
 export class CreateProjectDto {
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Project name is required' })
+  @MinLength(6, { message: 'Project name must be at least 6 characters' })
   projectName: string;
 
   @IsString()
