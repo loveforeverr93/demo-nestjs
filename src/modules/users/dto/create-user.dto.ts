@@ -36,6 +36,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty({ message: 'Full name is required' })
+  @MinLength(2, { message: 'Full name must be at least 2 characters' })
   @MaxLength(100, { message: 'Full name must be at most 100 characters' })
   fullName: string;
 }

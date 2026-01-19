@@ -182,8 +182,14 @@ export class ProjectService {
     if (ownerCode !== project.owner.userCode)
       throw new BadRequestException('You are not project owner.');
 
-    const userAdds = await this.usersRepository.find({
+    const userAvailables = await this.usersRepository.find({
       where: { userCode: Not(ownerCode) },
+    });
+
+    const userAdds = userAvailables.filter((user) => {
+      return request.members.some(
+        (member) => member.userCode === user.userCode,
+      );
     });
 
     const existingUserCode = new Set([
