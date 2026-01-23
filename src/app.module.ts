@@ -33,6 +33,9 @@ import redisConfig from './config/redis.config';
         autoLoadEntities: true,
         synchronize: false,
         logger: 'advanced-console',
+        ssl: {
+          rejectUnauthorized: true,
+        },
       }),
     }),
     AuthModule,
