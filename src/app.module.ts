@@ -31,7 +31,7 @@ import redisConfig from './config/redis.config';
         password: configService.get<string>('database.password'),
         database: configService.get<string>('database.name'),
         autoLoadEntities: true,
-        synchronize: true,
+        synchronize: false,
         logger: 'advanced-console',
       }),
     }),
