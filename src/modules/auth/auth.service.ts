@@ -50,7 +50,7 @@ export class AuthService {
     const refreshToken = this.generateRefreshToken();
 
     const redisKey = `refresh_token:${refreshToken}`;
-    await this.redis.set(redisKey, String(user.userId), 'EX', 60 * 60 * 24);
+    await this.redis.set(redisKey, String(user.userId), 60 * 60 * 24);
     return { accessToken, refreshToken };
   }
 

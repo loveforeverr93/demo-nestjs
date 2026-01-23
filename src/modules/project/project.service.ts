@@ -53,17 +53,17 @@ export class ProjectService {
     pagination: PaginationDto,
   ): Promise<PaginationResponseDto<ProjectResponseDto>> {
     const { currentPage, pageSize } = pagination;
-    const projects = await this.projectRepository
+    const [projects, total] = await this.projectRepository
       .createQueryBuilder('project')
-      .leftJoinAndSelect('project.owner', 'owner')
-      .leftJoinAndSelect('project.members', 'member')
+      .leftJoin('project.owner', 'owner')
+      .leftJoin('project.members', 'member')
       .where('owner.userCode = :userCode', { userCode })
       .orWhere('member.userCode = :userCode', { userCode })
       .distinct(true)
       .orderBy('project.createdAt', 'DESC')
       .skip((currentPage - 1) * pageSize)
       .take(pageSize)
-      .getMany();
+      .getManyAndCount();
 
     if (!projects)
       return {

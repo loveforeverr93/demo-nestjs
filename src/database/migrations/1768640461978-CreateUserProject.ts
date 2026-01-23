@@ -43,13 +43,13 @@ export class CreateUserProject1768640461978 implements MigrationInterface {
     // 3. Tạo bảng trung gian cho ManyToMany (members)
     await queryRunner.query(`
             CREATE TABLE \`projects_members_users\` (
-                \`projectId\` int NOT NULL,
-                \`userId\` int NOT NULL,
-                INDEX \`IDX_project\` (\`projectId\`),
-                INDEX \`IDX_user\` (\`userId\`),
-                PRIMARY KEY (\`projectId\`, \`userId\`),
-                CONSTRAINT \`FK_pm_project\` FOREIGN KEY (\`projectId\`) REFERENCES \`projects\` (\`project_id\`) ON DELETE CASCADE ON UPDATE CASCADE,
-                CONSTRAINT \`FK_pm_user\` FOREIGN KEY (\`userId\`) REFERENCES \`users\` (\`user_id\`) ON DELETE CASCADE ON UPDATE CASCADE
+                \`project_id\` int NOT NULL,
+                \`user_id\` int NOT NULL,
+                INDEX \`IDX_project\` (\`project_id\`),
+                INDEX \`IDX_user\` (\`user_id\`),
+                PRIMARY KEY (\`project_id\`, \`user_id\`),
+                CONSTRAINT \`FK_pm_project\` FOREIGN KEY (\`project_id\`) REFERENCES \`projects\` (\`project_id\`) ON DELETE CASCADE ON UPDATE CASCADE,
+                CONSTRAINT \`FK_pm_user\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`user_id\`) ON DELETE CASCADE ON UPDATE CASCADE
             ) ENGINE=InnoDB
         `);
   }
