@@ -22,12 +22,15 @@ async function run() {
       password: configService.get<string>('database.password'),
       database: configService.get<string>('database.name'),
       entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
+      ssl: {
+        rejectUnauthorized: true,
+      },
     }).initialize();
     await runSeeds(dataSource);
     console.log('✅ Seeds completed successfully');
     try {
       console.log('🌱 Running seeds');
-      
+
       console.log('✅ Admin user already exists');
     } catch (error) {
       console.error('❌ Seed error:', error);
