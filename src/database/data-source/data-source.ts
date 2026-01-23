@@ -12,4 +12,7 @@ export const AppDataSource = new DataSource({
   entities: [User, Project],
   migrations: ['dist/database/migrations/*.js'],
   synchronize: false,
+  ssl: {
+    rejectUnauthorized: true,
+  },
 });
